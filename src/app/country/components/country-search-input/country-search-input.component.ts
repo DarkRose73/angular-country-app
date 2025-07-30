@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'country-search-input',
@@ -6,9 +6,10 @@ import { Component, output } from '@angular/core';
   templateUrl: './country-search-input.component.html',
 })
 export class CountrySearchInputComponent {
-  onSearch = output<string>();
+  search = output<string>();
+  placeholder = input<string>('Buscar');
 
-  search(val: string): void {
-    this.onSearch.emit(val);
+  onSearch(val: string): void {
+    this.search.emit(val);
   }
 }
