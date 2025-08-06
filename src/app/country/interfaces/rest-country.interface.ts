@@ -1,4 +1,4 @@
-export interface RESTCountries {
+export interface RESTCountry {
   name: Name;
   tld: string[];
   cca2: string;
