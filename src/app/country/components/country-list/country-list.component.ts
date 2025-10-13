@@ -1,5 +1,5 @@
-import { Component, input } from '@angular/core';
-import { ICountry } from '../../interfaces/country.interface';
+import {Component, input} from '@angular/core';
+import {ICountry} from '../../interfaces/country.interface';
 import {DecimalPipe} from '@angular/common';
 import {RouterLink, RouterModule} from '@angular/router';
 
@@ -13,4 +13,7 @@ import {RouterLink, RouterModule} from '@angular/router';
 })
 export class CountryListComponent {
   countries = input.required<ICountry[]>();
+  errorMessage = input<unknown>();
+  isLoading = input<boolean>(false);
+  isEmpty = input<boolean>(false);
 }
