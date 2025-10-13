@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject, resource, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {CountrySearchInputComponent} from "../../components/country-search-input/country-search-input.component";
 import {CountryListComponent} from "../../components/country-list/country-list.component";
 import {CountryService} from '../../services/country.service';
-import {firstValueFrom} from 'rxjs';
+import {of} from 'rxjs';
+import {rxResource} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-by-capital-page',
@@ -14,15 +15,25 @@ export class ByCapitalPageComponent {
   private readonly countryService = inject(CountryService);
   query = signal<string>('');
 
-  countryResource = resource({
+  // Resource con Observables
+  countryResource = rxResource({
     request: () => ({query: this.query()}),
-    loader: async ({request}) => {
-      if (request.query === '' || !request.query) return [];
-      return await firstValueFrom(
-        this.countryService.searchByCaptial(request.query)
-      );
+    loader: ({request}) => {
+      if (request.query === '' || !request.query) return of([]);
+      return this.countryService.searchByCaptial(request.query);
     },
-  })
+  });
+
+  // Resource con Promises
+  // countryResource = resource({
+  //   request: () => ({query: this.query()}),
+  //   loader: async ({request}) => {
+  //     if (request.query === '' || !request.query) return [];
+  //     return await firstValueFrom(
+  //       this.countryService.searchByCaptial(request.query)
+  //     );
+  //   },
+  // })
 
   // isLoading = signal<boolean>(false);
   // isError = signal<string | null>(null);
