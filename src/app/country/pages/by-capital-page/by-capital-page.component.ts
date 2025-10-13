@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CountrySearchInputComponent } from "../../components/country-search-input/country-search-input.component";
-import { CountryListComponent } from "../../components/country-list/country-list.component";
-import { CountryService } from '../../services/country.service';
-import { ICountry } from '../../interfaces/country.interface';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {CountrySearchInputComponent} from "../../components/country-search-input/country-search-input.component";
+import {CountryListComponent} from "../../components/country-list/country-list.component";
+import {CountryService} from '../../services/country.service';
+import {ICountry} from '../../interfaces/country.interface';
 
 @Component({
   selector: 'app-by-capital-page',
@@ -24,9 +24,16 @@ export class ByCapitalPageComponent {
     this.isError.set(null);
 
     this.countryService.searchByCaptial(query)
-      .subscribe((countries) => {
-        this.countries.set(countries);
-        this.isLoading.set(false);
+      .subscribe({
+        next: (countries) => {
+          this.countries.set(countries);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          this.countries.set([]);
+          this.isError.set(err);
+        }
       })
   }
 }
