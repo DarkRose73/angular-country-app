@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {RESTCountry} from '../interfaces/rest-country.interface';
-import {catchError, delay, map, Observable, throwError} from 'rxjs';
+import {catchError, delay, map, Observable, of, tap, throwError} from 'rxjs';
 import {CountryMapper} from '../mapper/country.mapper';
 import {ICountry} from '../interfaces/country.interface';
 
@@ -12,13 +12,19 @@ const API_URL = "https://restcountries.com/v3.1"
 })
 export class CountryService {
   private readonly http = inject(HttpClient);
+  private readonly queryCacheCapital = new Map<string, ICountry[]>();
 
   searchByCapital(query: string): Observable<ICountry[]> {
     query = query.toLowerCase();
 
+    if (this.queryCacheCapital.has(query)) {
+      return of(this.queryCacheCapital.get(query)!);
+    }
+
     return this.http.get<RESTCountry[]>(`${API_URL}/capital/${query}`)
       .pipe(
         map((res) => CountryMapper.mapRestCountryArrayToICountryArray(res)),
+        tap(countries => this.queryCacheCapital.set(query, countries)),
         delay(750),
         catchError((error) => {
           console.log("Error fetching ", error);
@@ -53,5 +59,4 @@ export class CountryService {
         })
       );
   }
-
 }

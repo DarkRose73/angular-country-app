@@ -19,7 +19,7 @@ export class ByCapitalPageComponent {
   countryResource = rxResource({
     request: () => ({query: this.query()}),
     loader: ({request}) => {
-      if (request.query === '' || !request.query) return of([]);
+      if (request.query === '' || !request.query || request.query.trim().length === 0) return of([]);
       return this.countryService.searchByCapital(request.query);
     },
   });
