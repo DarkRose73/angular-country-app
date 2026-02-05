@@ -3,8 +3,9 @@ import {RESTCountry} from '../interfaces/rest-country.interface';
 
 export class CountryMapper {
   static mapRestCountryToICountry(item: RESTCountry): ICountry {
+    console.log(item);
     return {
-      capital: item.capital.join(','),
+      capital: item.capital?.join(',') ?? 'NO CAPITAL',
       cca2: item.cca2,
       flag: item.flag,
       flagSvg: item.flags.svg,

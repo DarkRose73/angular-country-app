@@ -9,7 +9,7 @@ export interface RESTCountry {
   unMember: boolean;
   currencies: Currencies;
   idd: Idd;
-  capital: string[];
+  capital?: string[];
   altSpellings: string[];
   region: string;
   subregion: string;
