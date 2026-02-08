@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, linkedSignal} from '@angular/core';
 import {CountrySearchInputComponent} from "../../components/country-search-input/country-search-input.component";
 import {CountryListComponent} from "../../components/country-list/country-list.component";
 import {CountryService} from '../../services/country.service';
 import {of} from 'rxjs';
 import {rxResource} from '@angular/core/rxjs-interop';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-by-capital-page',
@@ -13,12 +14,16 @@ import {rxResource} from '@angular/core/rxjs-interop';
 })
 export class ByCapitalPageComponent {
   private readonly countryService = inject(CountryService);
-  query = signal<string>('');
+  private readonly activatedRoute = inject(ActivatedRoute);
+
+  queryParam = this.activatedRoute.snapshot.queryParamMap.get('query') ?? '';
+  query = linkedSignal<string>(() => this.queryParam);
 
   // Resource con Observables
   countryResource = rxResource({
     request: () => ({query: this.query()}),
     loader: ({request}) => {
+      console.log("query: ", request.query);
       if (request.query === '' || !request.query || request.query.trim().length === 0) return of([]);
       return this.countryService.searchByCapital(request.query);
     },
